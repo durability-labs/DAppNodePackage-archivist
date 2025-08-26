@@ -37,7 +37,7 @@ fields:
       service: codex-node
     title: ETH_PRIVATE_KEY
     description: >-
-      Ethereum private key which will be saved to a file and passed as a value for `CODEX_ETH_PRIVATE_KEY` variable.
+      Ethereum private key which will be saved to a file which will be passed as a value for `CODEX_ETH_PRIVATE_KEY` variable.
     secret: true
     pattern: "^0x[a-fA-F0-9]{64}$"
     patternErrorMessage: Must be a valid private key (0x1fd16a...)
