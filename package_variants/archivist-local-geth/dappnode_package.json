@@ -1,0 +1,9 @@
+{
+  "name": "archivist-local-geth.public.dappnode.eth",
+  "version": "0.1.0",
+  "links": {
+    "homepage": "https://archivist.storage",
+    "ui": "http://archivist-local-geth.public.dappnode",
+    "api": "http://archivist-node.archivist-local-geth.public.dappnode:8080/api/archivist/v1"
+  }
+}

@@ -1,8 +1,8 @@
 version: "3.8"
 services:
-  codex-node:
+  archivist-node:
     environment:
-      CODEX_ETH_PROVIDER: http://geth.codex-local-geth.public.dappnode:8545
+      ARCHIVIST_ETH_PROVIDER: http://geth.archivist-local-geth.public.dappnode:8545
     depends_on:
       - geth
 
@@ -12,7 +12,7 @@ services:
       dockerfile: Dockerfile
       args:
         UPSTREAM_VERSION_GETH: v1.13.15
-    image: geth.codex.public.dappnode.eth:1.13.15
+    image: geth.archivist.public.dappnode.eth:1.13.15
     restart: unless-stopped
     environment:
       NETWORK: testnet

@@ -1,3 +1,0 @@
-ARG UPSTREAM_VERSION_CODEX_APP
-
-FROM codexstorage/codex-marketplace-ui:${UPSTREAM_VERSION_CODEX_APP}
