@@ -1,0 +1,9 @@
+{
+  "name": "archivist.public.dappnode.eth",
+  "version": "0.1.0",
+  "links": {
+    "homepage": "https://archivist.storage",
+    "ui": "http://archivist.public.dappnode",
+    "api": "http://archivist-node.archivist.public.dappnode:8080/api/archivist/v1"
+  }
+}

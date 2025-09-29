@@ -11,9 +11,9 @@ fi
 
 
 # Parameters
-if [[ -z "${CODEX_NAT}" ]]; then
+if [[ -z "${ARCHIVIST_NAT}" ]]; then
   if [[ "${NAT_IP_AUTO}" == "true" && -z "${NAT_PUBLIC_IP_AUTO}" ]]; then
-    export CODEX_NAT="extip:$(hostname --ip-address)"
+    export ARCHIVIST_NAT="extip:$(hostname --ip-address)"
   elif [[ -n "${NAT_PUBLIC_IP_AUTO}" ]]; then
     # Run for 60 seconds if fail
     WAIT=120
@@ -23,7 +23,7 @@ if [[ -z "${CODEX_NAT}" ]]; then
       IP=$(curl -s -f -m 5 "${NAT_PUBLIC_IP_AUTO}")
       # Check if exit code is 0 and returned value is not empty
       if [[ $? -eq 0 && -n "${IP}" ]]; then
-        export CODEX_NAT="extip:${IP}"
+        export ARCHIVIST_NAT="extip:${IP}"
         break
       else
         # Sleep and check again
@@ -34,37 +34,38 @@ if [[ -z "${CODEX_NAT}" ]]; then
   fi
 fi
 
-# Stop Codex run if can't get NAT IP when requested
-if [[ "${NAT_IP_AUTO}" == "true" && -z "${CODEX_NAT}" ]]; then
-  echo "Can't get Private IP - Stop Codex run"
+# Stop node run if can't get NAT IP when requested
+if [[ "${NAT_IP_AUTO}" == "true" && -z "${ARCHIVIST_NAT}" ]]; then
+  echo "Can't get Private IP - Stop node run"
   exit 1
-elif [[ -n "${NAT_PUBLIC_IP_AUTO}" && -z "${CODEX_NAT}" ]]; then
-  echo "Can't get Public IP in $WAIT seconds - Stop Codex run"
+elif [[ -n "${NAT_PUBLIC_IP_AUTO}" && -z "${ARCHIVIST_NAT}" ]]; then
+  echo "Can't get Public IP in $WAIT seconds - Stop node run"
   exit 1
 fi
 
 # If marketplace is enabled from the testing environment,
-# The file has to be written before Codex starts.
+# The file has to be written before the node starts.
 keyfile="private.key"
 if [[ -n "${ETH_PRIVATE_KEY}" ]]; then
   echo "${ETH_PRIVATE_KEY}" > "${keyfile}"
   chmod 600 "${keyfile}"
-  export CODEX_ETH_PRIVATE_KEY="${keyfile}"
+  export ARCHIVIST_ETH_PRIVATE_KEY="${keyfile}"
   echo "Private key set"
 fi
 
 # Set arguments
-if [[ "${MODE}" == "codex-node-with-marketplace" ]]; then
+if [[ "${MODE}" == "archivist-node-with-marketplace" ]]; then
   set -- "$@" persistence
-  [[ -z "${CODEX_MARKETPLACE_ADDRESS}" ]] && unset CODEX_MARKETPLACE_ADDRESS
-elif [[ "${MODE}" == "codex-storage-node" ]]; then
+  [[ -z "${ARCHIVIST_MARKETPLACE_ADDRESS}" ]] && unset ARCHIVIST_MARKETPLACE_ADDRESS
+elif [[ "${MODE}" == "archivist-storage-node" ]]; then
   set -- "$@" persistence prover
 else
-  unset CODEX_ETH_PROVIDER
+  unset ARCHIVIST_ETH_PROVIDER
 fi
 
 # Bootstrap node from URL
-BOOTSTRAP_NODE_FROM_URL="${BOOTSTRAP_NODE_FROM_URL:-https://spr.codex.storage/${NETWORK}}"
+BOOTSTRAP_SERVICE_URL="https://spr.archivist.storage"
+BOOTSTRAP_NODE_FROM_URL="${BOOTSTRAP_NODE_FROM_URL:-${BOOTSTRAP_SERVICE_URL}/${NETWORK}}"
 
 if [[ -n "${BOOTSTRAP_NODE_FROM_URL}" ]]; then
   WAIT=${BOOTSTRAP_NODE_FROM_URL_WAIT:-300}
@@ -92,20 +93,20 @@ fi
 set -- "$@" ${EXTRA_OPTS}
 
 # Check if the endpoint is synced
-if [[ -n "${CODEX_ETH_PROVIDER}" ]]; then
+if [[ -n "${ARCHIVIST_ETH_PROVIDER}" ]]; then
   echo "Marketplace is enabled - Check if the endpoint is synced"
 
   timeout=3
   interval=5
-  endpoint="${CODEX_ETH_PROVIDER}"
+  endpoint="${ARCHIVIST_ETH_PROVIDER}"
   while true; do
     block=$(curl -m $timeout -X POST \
-      -s "${CODEX_ETH_PROVIDER}" \
+      -s "${ARCHIVIST_ETH_PROVIDER}" \
       -H 'Content-Type: application/json' \
       -d '{"jsonrpc":"2.0","method":"eth_getBlockByNumber","params":["latest",false],"id":0}' | jq -r '.result.number')
     block=$(("${block}"))
     sync=$(curl -m $timeout -X POST \
-      -s "${CODEX_ETH_PROVIDER}" \
+      -s "${ARCHIVIST_ETH_PROVIDER}" \
       -H 'Content-Type: application/json' \
       -w %{time_total} \
       -d '{"jsonrpc":"2.0","method":"eth_syncing","params":[],"id":1}')
@@ -131,31 +132,31 @@ if [[ "$@" == *"prover"* ]]; then
   for arg in data-dir circuit-dir eth-provider marketplace-address; do
     arg_value=$(grep -o "${arg}=[^ ,]\+" <<< $@ | awk -F '=' '{print $2}')
     if [[ -n "${arg_value}" ]]; then
-      var_name=$(tr '[:lower:]' '[:upper:]' <<< "CODEX_${arg//-/_}")
+      var_name=$(tr '[:lower:]' '[:upper:]' <<< "ARCHIVIST_${arg//-/_}")
       export "${var_name}"="${arg_value}"
     fi
   done
 
-  # Set circuit dir from CODEX_CIRCUIT_DIR variables if set
-  if [[ -z "${CODEX_CIRCUIT_DIR}" ]]; then
-    export CODEX_CIRCUIT_DIR="${CODEX_DATA_DIR}/circuits"
+  # Set circuit dir from ARCHIVIST_CIRCUIT_DIR variables if set
+  if [[ -z "${ARCHIVIST_CIRCUIT_DIR}" ]]; then
+    export ARCHIVIST_CIRCUIT_DIR="${ARCHIVIST_DATA_DIR}/circuits"
   fi
 
   # Download circuit
-  mkdir -p "${CODEX_CIRCUIT_DIR}"
-  chmod 700 "${CODEX_CIRCUIT_DIR}"
-  download="cirdl ${CODEX_CIRCUIT_DIR} ${CODEX_ETH_PROVIDER} ${CODEX_MARKETPLACE_ADDRESS}"
+  mkdir -p "${ARCHIVIST_CIRCUIT_DIR}"
+  chmod 700 "${ARCHIVIST_CIRCUIT_DIR}"
+  download="cirdl ${ARCHIVIST_CIRCUIT_DIR} ${ARCHIVIST_ETH_PROVIDER} ${ARCHIVIST_MARKETPLACE_ADDRESS}"
   echo "${download}"
   eval "${download}"
   [[ $? -ne 0 ]] && { echo "Failed to download circuit files"; exit 1; }
 fi
 
 # Show
-echo -e "\nCodex run parameters:"
-vars=$(env | grep CODEX_)
-echo -e "${vars//CODEX_/   - CODEX_}"
+echo -e "\nRun parameters"
+vars=$(env | grep ARCHIVIST_)
+echo -e "${vars//ARCHIVIST_/   - ARCHIVIST_}"
 echo -e "   - $@\n"
 
 # Run
-echo "Run Codex node"
+echo "Run node"
 exec "$@"

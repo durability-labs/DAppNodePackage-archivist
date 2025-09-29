@@ -1,34 +1,29 @@
 {
   "upstream": [
     {
-      "repo": "codex-storage/nim-codex",
-      "version": "0.2.5",
-      "arg": "UPSTREAM_VERSION_CODEX_NODE"
+      "repo": "durability-labs/archivist-node",
+      "version": "0.0.2",
+      "arg": "UPSTREAM_VERSION_ARCHIVIST_NODE"
     },
     {
-      "repo": "codexstorage/codex-marketplace-ui",
-      "version": "0.0.16",
-      "arg": "UPSTREAM_VERSION_CODEX_APP"
-    },
-    {
-      "repo": "ethereum/client-go",
-      "version": "v1.13.15",
-      "arg": "UPSTREAM_VERSION_GETH"
+      "repo": "durabilitylabs/archivist-app",
+      "version": "0.0.1",
+      "arg": "UPSTREAM_VERSION_ARCHIVIST_APP"
     }
   ],
-  "shortDescription": "Codex Storage - Decentralized Durability Engine",
-  "description": "Codex is a durable, decentralised storage protocol designed to safeguard the world's most valuable information. Join the testnet to help secure a resilient digital future.",
+  "shortDescription": "Archivist Storage - Decentralized Durability Engine",
+  "description": "Archivist is a durable, decentralised storage protocol designed to safeguard the world's most valuable information. Join the testnet to help secure a resilient digital future.",
   "type": "service",
-  "mainService": "codex-app",
+  "mainService": "archivist-app",
   "architectures": ["linux/amd64", "linux/arm64"],
-  "author": "Codex DevOps",
+  "author": "Archivist DevOps",
   "categories": ["Storage"],
   "repository": {
     "type": "git",
-    "url": "https://github.com/codex-storage/DAppNodePackage-codex.git"
+    "url": "https://github.com/durability-labs/DAppNodePackage-archivist.git"
   },
   "bugs": {
-    "url": "https://github.com/codex-storage/nim-codex/issues"
+    "url": "https://github.com/durability-labs/archivist-node/issues"
   },
   "license": "Apache-2.0, MIT"
 }
