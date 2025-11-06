@@ -64,8 +64,8 @@ else
 fi
 
 # Bootstrap node from URL
-BOOTSTRAP_SERVICE_URL="https://spr.archivist.storage"
-BOOTSTRAP_NODE_FROM_URL="${BOOTSTRAP_NODE_FROM_URL:-${BOOTSTRAP_SERVICE_URL}/${NETWORK}}"
+CONFIG_URL="https://config.archivist.storage"
+BOOTSTRAP_NODE_FROM_URL="${BOOTSTRAP_NODE_FROM_URL:-${CONFIG_URL}/${NETWORK}/spr}"
 
 if [[ -n "${BOOTSTRAP_NODE_FROM_URL}" ]]; then
   WAIT=${BOOTSTRAP_NODE_FROM_URL_WAIT:-300}
