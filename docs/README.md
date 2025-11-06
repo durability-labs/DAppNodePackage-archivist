@@ -27,7 +27,7 @@
 
 ## Server
 
- 1. Run an Ubuntu VM on Hetzner - `8vCPU/16GB RAM` (`cx42/cpx41`)
+ 1. Run an Ubuntu VM on Hetzner - `8vCPU/16GB RAM` (`cx43/cpx42`)
  2. Create firewall rules based on the [Cloud Providers / AWS](https://docs.dappnode.io/docs/user/dappnode-cloud/providers/aws/set-up-instance/) guide
 
     | Protocol | Port         | Service       | Source      | Comment                              |
@@ -121,9 +121,11 @@
 
  4. Copy package files to Dappnode server
     ```shell
-    local_dir="DAppNodePackage-archivist"
+    local_dir="."
     remote_dir="/opt/DAppNodePackage-archivist"
     host="root@<server-ip>"
+
+    cd DAppNodePackage-archivist
 
     rsync -avze ssh --rsync-path='sudo rsync --mkpath' "${local_dir}/" "${host}:${remote_dir}/" --delete
     ```
@@ -136,6 +138,7 @@
     ```shell
     # Code directory - multi-arch builds failed with --dir argument
     cd /opt/DAppNodePackage-archivist
+    chown -R `whoami`:`whoami` .
 
     # Use Ipfs node IP
     npx @dappnode/dappnodesdk build --variants archivist --provider=http://172.33.0.3:5001
