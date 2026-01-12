@@ -2,7 +2,7 @@
   "upstream": [
     {
       "repo": "durability-labs/archivist-node",
-      "version": "0.0.2",
+      "version": "0.2.0",
       "arg": "UPSTREAM_VERSION_ARCHIVIST_NODE"
     },
     {
