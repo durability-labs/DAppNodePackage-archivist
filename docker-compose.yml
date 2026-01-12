@@ -5,7 +5,7 @@ services:
       context: ./archivist-node
       dockerfile: Dockerfile
       args:
-        UPSTREAM_VERSION_ARCHIVIST_NODE: 0.0.2
+        UPSTREAM_VERSION_ARCHIVIST_NODE: 0.2.0
     image: archivist-node.public.dappnode.eth:0.2.5
     restart: unless-stopped
     environment:
