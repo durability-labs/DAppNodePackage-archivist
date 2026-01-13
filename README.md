@@ -32,7 +32,7 @@
 
  | Package   | Link                                                                                                                                                   |
  | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
- | Archivist | [`/ipfs/QmUQSPR5r5hN1nf8uNjR6Q6hGJguW9AkXWvoAMkMhTkvTr`](http://my.dappnode/installer/public/%2Fipfs%2FQmUQSPR5r5hN1nf8uNjR6Q6hGJguW9AkXWvoAMkMhTkvTr) |
+ | Archivist | [`/ipfs/QmefgQyfpdb3htFEJfYfWY3CNoafPGwJB2oZ98Ah5TXD26`](http://my.dappnode/installer/public/%2Fipfs%2FQmefgQyfpdb3htFEJfYfWY3CNoafPGwJB2oZ98Ah5TXD26) |
 
 
 ## Todo

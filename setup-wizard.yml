@@ -9,7 +9,7 @@ fields:
     description: >-
       - **`Archivist node`** - useful for local testing/development and basic/files sharing.
 
-      - **`Archivist node with marketplace support`** (`Recommended`) - you can share files and buy the storage, this is the main mode and should be used by the end users.
+      - **`Archivist node with marketplace`** (`recommended`) - you can share files and buy the storage, this is the main mode and should be used by the end users.
 
       - **`Archivist storage node`** - should be used by storage providers or if you would like to sell your local storage.
     enum:
@@ -22,7 +22,7 @@ fields:
     target:
       type: environment
       name: NETWORK
-      service: [archivist-node, geth]
+      service: [archivist-node]
     title: Archivist network
     description: >-
       - **`Testnet`** - Archivist Testnet network. Check the [docs](https://docs.archivist.storage/networks/networks) for available networks.
@@ -51,15 +51,14 @@ fields:
       service: archivist-node
     title: ARCHIVIST_ETH_PROVIDER
     description: >-
-      The URL of the JSON-RPC API of the Ethereum node - use [Public RPC endpoint](https://docs.archivist.storage/networks/networks) or local Geth node RPC.
+      The URL of the JSON-RPC API of the Ethereum node - use [Public RPC endpoint](https://docs.archivist.storage/networks/networks).
     pattern: >-
       ^(http(s|)\:\/\/|)((([a-zA-Z0-9-_]{1,}\.){1,})([a-zA-Z]{1}[a-zA-Z0-9-]{1,}))(:[0-9]{1,}|)(\/[a-zA-Z0-9_~#?\+\&\.\/-=%-]{1,}|)$
     patternErrorMessage: Must be a valid URL
     required: true
     if: { "MODE": { "enum": ["archivist-node-with-marketplace", "archivist-storage-node"] } }
 
-  # We can't make 'required' conditional and need to define save variable two times
-  - id: ARCHIVIST_MARKETPLACE_ADDRESS-node-with-marketplace-support
+  - id: ARCHIVIST_MARKETPLACE_ADDRESS
     target:
       type: environment
       name: ARCHIVIST_MARKETPLACE_ADDRESS
@@ -72,22 +71,7 @@ fields:
     pattern: "^0x[a-fA-F0-9]{40}$"
     patternErrorMessage: Must be a valid Ethereum address
     required: false
-    if: { "MODE": { "enum": ["archivist-node-with-marketplace"] } }
-
-  - id: ARCHIVIST_MARKETPLACE_ADDRESS-storage-node
-    target:
-      type: environment
-      name: ARCHIVIST_MARKETPLACE_ADDRESS
-      service: archivist-node
-    title: ARCHIVIST_MARKETPLACE_ADDRESS
-    description: >-
-      Address of deployed Marketplace contract.
-
-      We should set this variable because we are running in **Archivist `storage node`** mode. Check the address for the network you are using in the [docs](https://docs.archivist.storage/networks/networks).
-    pattern: "^0x[a-fA-F0-9]{40}$"
-    patternErrorMessage: Must be a valid Ethereum address
-    required: true
-    if: { "MODE": { "enum": ["archivist-storage-node"] } }
+    if: { "MODE": { "enum": ["archivist-node-with-marketplace", "archivist-storage-node"] } }
 
   - id: IP_MODE
     target:
