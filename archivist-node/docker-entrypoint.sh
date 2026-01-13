@@ -55,13 +55,14 @@ fi
 
 # Set arguments
 if [[ "${MODE}" == "archivist-node-with-marketplace" ]]; then
-  set -- "$@" persistence
-  [[ -z "${ARCHIVIST_MARKETPLACE_ADDRESS}" ]] && unset ARCHIVIST_MARKETPLACE_ADDRESS
+  export ARCHIVIST_PERSISTENCE="true"
 elif [[ "${MODE}" == "archivist-storage-node" ]]; then
-  set -- "$@" persistence prover
+  export ARCHIVIST_PERSISTENCE="true"
+  export ARCHIVIST_PROVER="true"
 else
   unset ARCHIVIST_ETH_PROVIDER
 fi
+[[ -z "${ARCHIVIST_MARKETPLACE_ADDRESS}" ]] && unset ARCHIVIST_MARKETPLACE_ADDRESS
 
 # Bootstrap node from URL
 CONFIG_URL="https://config.archivist.storage"
@@ -125,8 +126,8 @@ fi
 
 # Circuit downloader
 # cirdl [circuitPath] [rpcEndpoint] [marketplaceAddress]
-if [[ "$@" == *"prover"* ]]; then
-  echo "Prover is enabled - Run Circuit downloader"
+if [[ "${ARCHIVIST_PROVER}" == "true" && -z "${SKIP_DOWNLOAD_CIRCUIT}" ]]; then
+  echo "Run Circuit downloader"
 
   # Set variables required by cirdl from command line arguments when passed
   for arg in data-dir circuit-dir eth-provider marketplace-address; do
@@ -152,7 +153,7 @@ if [[ "$@" == *"prover"* ]]; then
 fi
 
 # Show
-echo -e "\nRun parameters"
+echo -e "\nNode run parameters"
 vars=$(env | grep ARCHIVIST_)
 echo -e "${vars//ARCHIVIST_/   - ARCHIVIST_}"
 echo -e "   - $@\n"
